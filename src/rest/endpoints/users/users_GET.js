@@ -20,21 +20,23 @@ const userGetRequest = (req, res) => {
         });
       } else {
 
-        const nextPage = {'nr': (page+1), 'href': '/users?p=' + (page+1), 'type': 'GET'};
-        const prevPage = {'nr': (page-1), 'href': '/users?p=' + (page-1), 'type': 'GET'};
-
-        const links = {};
-        if (page > 1) links.prevPage = prevPage;
-        if (result.rows.length >= perPage) links.nextPage = nextPage;
-
+        //Return-object
         const returnJson = {
           message: 'This is a list of all users, limited to 10 at a time.'
                   +' Currently showing users ' + (offset+1)
                   +' to ' + (Math.min(result.rows.length, (offset + perPage))) + '.',
           page: page,
           users: result.rows,
-          links: links,
+          links: [],
         };
+
+        //Add helpful links to return object
+        const nextPage = {'info': 'Next page', 'pagenr': (page+1), 'href': '/users?p=' + (page+1), 'type': 'GET'};
+        const prevPage = {'info': 'Previous page', 'pagenr': (page-1), 'href': '/users?p=' + (page-1), 'type': 'GET'};
+
+        //Conditionals for adding page-links
+        if (page > 1) returnJson.links.push(prevPage);
+        if (result.rows.length >= perPage) returnJson.links.push(nextPage);
 
         res.status(200).json(returnJson);
       }

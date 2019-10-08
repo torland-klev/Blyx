@@ -82,7 +82,7 @@ app.post('/api', (req, res, next) => {
 
 //Users
 app.get('/api/users*', userGetRequest);
-app.post('/api/users*', () => userPostRequest);
+app.post('/api/users*', userPostRequest);
 
 //Failsafe
 app.use(function(req, res){
