@@ -1,18 +1,8 @@
-const Pool = require('pg').Pool
+//Import database
+const { pool } = require('../../../config/globals');
 
-//Place these in a config file before deployment.
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'blux',
-  password: 'hquas13ta277',
-  port: 5432,
-});
-
-
-exports.userGetRequest = function(req, res) {
+const userGetRequest = (req, res) => {
   const url = req._parsedUrl.pathname;
-
   if (url == '/api/users'){
 
     let page = parseInt(req.query.p);
@@ -47,3 +37,7 @@ exports.userGetRequest = function(req, res) {
     })
   }
 }
+
+module.exports = {
+  userGetRequest,
+};

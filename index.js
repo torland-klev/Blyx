@@ -1,10 +1,9 @@
 const http = require('http');
-const routes = require('./routes');
+const app = require('./src/rest/app');
 
-//Running on HTTP port 80
 const port = process.env.PORT || 3000;
 
-const server = http.createServer(routes);
+const server = http.createServer(app);
 
 server.listen(port, '0.0.0.0',() => {
   console.log('Blux API running on port ' + port + '.');

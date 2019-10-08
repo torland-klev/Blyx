@@ -23,8 +23,9 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const { userGetRequest, userPostRequest } = require('./endpoints/users');
-//const { userPostRequest } = require('./endpoints/users');
+//const { userGetRequest, userPostRequest } = require('./endpoints/users');
+const { userPostRequest } = require('./endpoints/users/users_POST');
+const { userGetRequest } = require('./endpoints/users/users_GET');
 
 // Dependency MORGAN
 app.use(morgan('dev'));
@@ -79,7 +80,15 @@ app.post('/api', (req, res, next) => {
   });
 });
 
-app.get('/api/users*', () => userGetRequest);
+//Users
+app.get('/api/users*', userGetRequest);
 app.post('/api/users*', () => userPostRequest);
+
+//Failsafe
+app.use(function(req, res){
+  res.status(404).json({
+    info: 'Site not found',
+  });
+});
 
 module.exports = app;
