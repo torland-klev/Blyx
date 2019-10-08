@@ -1,0 +1,30 @@
+{
+  "name": "blyx-api",
+  "version": "1.0.0",
+  "description": "A Node.js API for the application \"Blyx\".",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.uio.no/henriktk/blux-api.git"
+  },
+  "keywords": [
+    "node",
+    "api",
+    "blyx",
+    "rest"
+  ],
+  "author": "Henrik Torland Klev",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.9.1",
+    "pg": "^7.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
