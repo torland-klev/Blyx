@@ -4,8 +4,8 @@
   "description": "A Node.js API for the application \"Blyx\".",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "test": "node src/tests && exit",
+    "start": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",

@@ -8,6 +8,11 @@ const pool = new Pool({
   port: 5432,
 });
 
+const logTools = {
+  seperator: '-------------------------------------------------------------',
+};
+
 module.exports = {
   pool,
+  logTools,
 };

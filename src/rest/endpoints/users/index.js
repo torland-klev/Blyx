@@ -1,5 +1,5 @@
 
 module.exports = {
-  userGetRequest: require('./users_GET'),
-  userPostReques: require('./users_POST')
+  userGetRequest: require('./users-get'),
+  userPostReques: require('./users-post')
 };

@@ -24,8 +24,8 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 //const { userGetRequest, userPostRequest } = require('./endpoints/users');
-const { userPostRequest } = require('./endpoints/users/users_POST');
-const { userGetRequest } = require('./endpoints/users/users_GET');
+const { userPostRequest } = require('./endpoints/users/users-post');
+const { userGetRequest } = require('./endpoints/users/users-get');
 
 // Dependency MORGAN
 app.use(morgan('dev'));
