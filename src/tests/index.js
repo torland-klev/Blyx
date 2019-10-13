@@ -1,7 +1,11 @@
-const { imageServiceTest }  = require('./services/database/image-service-test');
+const imageServiceTest  = require('./services/database/image-service-test');
 
-console.log("Running tests");
-
-imageServiceTest.run();
-
-console.log("Testing done");
+console.log("(Master) Running tests");
+new imageServiceTest()
+.run()
+.then((done) => {
+  console.log("(Master) Testing completed successfully!.");
+})
+.catch(error => {
+  console.log("(Master) Testing failed.", error);
+})
