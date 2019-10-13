@@ -4,8 +4,8 @@ console.log("(Master) Running tests");
 new imageServiceTest()
 .run()
 .then((done) => {
-  console.log("(Master) Testing completed successfully!.");
+  console.log("(Master) Testing completed successfully!");
 })
 .catch(error => {
-  console.log("(Master) Testing failed.", error);
+  console.log("(Master) Testing failed.");
 })

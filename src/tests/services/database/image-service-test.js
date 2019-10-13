@@ -1,4 +1,4 @@
-const { storeImage } = require('../../../rest/services/database/image-services');
+const { storeImage, getImage, getUserImages } = require('../../../rest/services/database/image-services');
 const { logTools } = require('../../../config/globals');
 
 //Import fs (https://nodejs.org/api/fs.html)
@@ -7,30 +7,36 @@ const fs = require('fs');
 let seperator = logTools.seperator;
 
 class imageServiceTest {
-  constructor(){};
+  constructor(){
+    console.log(seperator, '\nStarting Image-Service Tests\n', seperator);
+  };
 
   /* Sequence:
    * 1. storeImageString
    * 2. storeImageObject
+   * 3. getImages
+   *
+   * TODO: Make the sequence concurrent, monitor perhaps?
    */
   run(){
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
+      var error = false;
+
       storeImageString()
-      .then((retString) => {
-        console.log(retString, '\n(String) Finished!');
-        storeImageObject()
-        .then((retObject) => {
-          console.log(retObject, '\n(Object) Finished!')
-          return resolve();
-        })
-        .catch((err) => {
-          console.log('(Object) Test failed.', err);
-          return reject(err);
-        });
-      })
-      .catch((err) => {
-        console.log('(String) Test failed.', err);
-        return reject(err);
+      .catch(() => {error = true})
+      .then(() => storeImageObject())
+      .catch(() => {error = true})
+      .then(() => getUserImagesTest())
+      .then((images) => {/* Do something with images*/})
+      .catch(() => {error = true})
+      .then(() => getImageTest())
+      .then((image) => {/* Do something with image*/})
+      .catch(() => {error = true})
+      .then(() => {
+        if (error) {
+          reject();
+        }
+        resolve();
       });
     });
   }
@@ -47,13 +53,15 @@ function storeImageString(){
     console.log('(String) Starting!');
     storeImage(1, __dirname + '/test-jpg.jpg', (error, result) => {
       if(error){
-        return reject('(String) Test failed: ', error);
+        console.log('(String) Test failed: ', error);
+        reject();
       }
       else{
-        return resolve('(String) Image was successfully stored with ID: ' + result.rows[0].image_id);
+        console.log('(String) Image was successfully stored with ID: ' + result.rows[0].image_id, '\n(String) Finished!\n', seperator);
+        resolve();
       }
     });
-  });
+  })
 }
 
 /* Store image by parsing it through fs and sending it as an object.
@@ -64,13 +72,16 @@ function storeImageObject(){
     console.log('(Object) Starting!');
     fs.readFile((__dirname + '/test-png.PNG'), (err, imgData) => {
       if (err){
-        return reject('(Object) Test failed: ', err);
+        console.log('(Object) Test failed: ', err);
+        reject();
       } else {
         storeImage(1, imgData, (error, result) => {
           if (error) {
-            return reject('(Object) Test failed: ', err);
+            console.log('(Object) Test failed: ', err);
+            reject();
           } else {
-            return resolve('(Object) Image was successfully stored with ID: ' + result.rows[0].image_id);
+            console.log('(Object) Image was successfully stored with ID: ', result.rows[0].image_id, '\n(Object) Finished!\n',seperator);
+            resolve();
           }
         });
       }
@@ -79,8 +90,36 @@ function storeImageObject(){
 
 }
 
-function getImageTest(){
+/* Get all images from a given user_id */
+function getUserImagesTest(){
+  return new Promise((resolve, reject) => {
+    console.log('(GET-IMAGES) Starting!');
+    getUserImages(1, (err, res) => {
+      if (err) {
+        console.log('(GET-IMAGES) Test failed: ', err);
+        reject();
+      } else {
+        console.log('(GET-IMAGES) Number of images retreived: ', res.rows.length, '\n(GET-IMAGES) Finished!\n',seperator);
+        resolve(res);
+      }
+    })
+  })
+}
 
+/* Get a images from a given image_id */
+function getImageTest(){
+  return new Promise((resolve, reject) => {
+    console.log('(GET-IMAGES) Starting!');
+    getImage(95, (err, res) => {
+      if (err) {
+        console.log('(GET-IMAGE) Test failed: ', err);
+        reject();
+      } else {
+        console.log('(GET-IMAGE) Images retreived: ', res.rows[0].image, '\n(GET-IMAGE) Finished!\n',seperator);
+        resolve(res);
+      }
+    })
+  })
 }
 
 module.exports = imageServiceTest;
