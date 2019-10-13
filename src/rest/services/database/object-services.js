@@ -4,28 +4,34 @@ const { pool } = require('../../../config/globals');
 // Import fs (https://nodejs.org/api/fs.html)
 const fs = require('fs');
 
-// Stores a image in the database, returns (error, image_id);
-const storeImage = (userID, image, callback) => {
+/* Public
+ * Stores an image */
+const storeImage = (userID, object, callback) => {
+  storeObject('images', userID, object, 'image_id', callback);
+}
 
+/* Stores a object in the database, returns (error, <id>).
+ * Using a paramtereized query, where string concatination
+ * occurs for hard-coded values. */
+const storeObject = (table, userID, object, id, callback) => {
+
+  // Object to be stored is allowed to be null.
   var toInsert = null;
 
-  // If the image is a string, it is a supplied path.
-  if(typeof(image) === 'string'){
-    fs.readFile(image, (err, imgData) => {
+  // If the object is a string, it is a supplied path.
+  if(typeof(object) === 'string'){
+    fs.readFile(object, (err, objData) => {
       if (err) {
         return callback(err, null);
       }
-      toInsert = imgData;
+      toInsert = objData;
     });
   }
-  // If the images is an object, it is most likely the image.
-  else if(typeof(image) === 'object'){
-    toInsert = image;
+  else if(typeof(object) === 'object'){
+    toInsert = object;
   }
 
-  // Inserting data into 'profile_images' in column 'image' of type 'bytea'
-  // and column 'user_id' of type bigint.
-  pool.query('INSERT INTO images(user_id, image) VALUES($1, $2) RETURNING image_id', [userID, toInsert], (error, result) => {
+  pool.query('INSERT INTO '+ table +'(user_id, image) VALUES($1, $2) RETURNING ' + id, [userID, toInsert], (error, result) => {
     if (error) {
       return callback(error, null);
     } else {

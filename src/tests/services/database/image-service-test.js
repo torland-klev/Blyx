@@ -1,4 +1,4 @@
-const { storeImage, getImage, getUserImages } = require('../../../rest/services/database/image-services');
+const { storeImage, getImage, getUserImages } = require('../../../rest/services/database/object-services');
 const { logTools } = require('../../../config/globals');
 
 //Import fs (https://nodejs.org/api/fs.html)
@@ -30,7 +30,7 @@ class imageServiceTest {
       .then((images) => {/* Do something with images*/})
       .catch(() => {error = true})
       .then(() => getImageTest())
-      .then((image) => {/* Do something with image*/})
+      .then((image) => {fs.writeFile('image.png', image, 'binary', (err) => {if(err){console.log(err)}})})
       .catch(() => {error = true})
       .then(() => {
         if (error) {
@@ -77,7 +77,7 @@ function storeImageObject(){
       } else {
         storeImage(1, imgData, (error, result) => {
           if (error) {
-            console.log('(Object) Test failed: ', err);
+            console.log('(Object) Test failed: ', error);
             reject();
           } else {
             console.log('(Object) Image was successfully stored with ID: ', result.rows[0].image_id, '\n(Object) Finished!\n',seperator);
@@ -116,7 +116,7 @@ function getImageTest(){
         reject();
       } else {
         console.log('(GET-IMAGE) Images retreived: ', res.rows[0].image, '\n(GET-IMAGE) Finished!\n',seperator);
-        resolve(res);
+        resolve(res.rows[0].image);
       }
     })
   })
